@@ -1,7 +1,5 @@
 use std::error;
 
-// use actix_web::client::Client;
-
 use solana_sdk::program_pack::Pack;
 use solana_client::rpc_client::RpcClient;
 
@@ -16,7 +14,6 @@ use std::{
 
 use crate::facility;
 
-// use solana_ibport_contract::ibport::instruction::IBPortContractInstruction;
 use solana_ibport_contract::ibport::state::IBPortContract;
 
 
@@ -35,13 +32,6 @@ impl Fetcher {
     }
     
     fn fetch_ibport_state_encoded(&self) -> Result<Vec<u8>, Box<dyn error::Error>> {
-        // Create request builder and send request
-        // let response = self.client.get("http://www.rust-lang.org")
-        //     .header("User-Agent", "actix-web/3.0")
-        //     .send()     // <- Send request
-        //     .await;     // <- Wait for response
-
-        // println!("Response: {:?}", response);
         match self.client.get_account_data(
             &facility::pubkey_to_bytes(self.cfg.ibport_data_account.as_str())
         ) {
@@ -58,20 +48,28 @@ impl Fetcher {
             }
             Err(e) => Err(e)
         }
-
-        // Err(Box::new())
     }
 }
 
-pub struct ConfirmationManager;
+pub struct ConfirmationManager {
+    state: Option<IBPortContract>
+}
 
 
 impl ConfirmationManager {
     pub fn new() -> ConfirmationManager {
-        ConfirmationManager {}
+        ConfirmationManager {
+            state: None
+        }
     }
 
+    pub fn update(&mut self, state: IBPortContract) {
+        self.state = Some(state);
+    }
 
+    fn get_requests_to_confirm() {
+
+    }
     // pub fn confirm(&self) -> Result<(), Box<dyn error::Error>> {
 
     //     // let ix = 
