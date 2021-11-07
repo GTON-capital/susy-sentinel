@@ -1,6 +1,6 @@
 # SuSy Sentinel [WIP]
 
-SuSy Sentinel aims to broadcast to transactions with existings signatures being a fee payer for them. 
+SuSy Sentinel aims to broadcast the transactions with existings signatures being a fee payer for them. 
 
 ## Dependencies
 
