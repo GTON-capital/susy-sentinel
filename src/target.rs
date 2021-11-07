@@ -51,31 +51,3 @@ impl Fetcher {
     }
 }
 
-pub struct ConfirmationManager {
-    state: Option<IBPortContract>
-}
-
-
-impl ConfirmationManager {
-    pub fn new() -> ConfirmationManager {
-        ConfirmationManager {
-            state: None
-        }
-    }
-
-    pub fn update(&mut self, state: IBPortContract) {
-        self.state = Some(state);
-    }
-
-    fn get_requests_to_confirm() {
-
-    }
-    // pub fn confirm(&self) -> Result<(), Box<dyn error::Error>> {
-
-    //     // let ix = 
-    // }
-
-    // fn decode_ib() -> {
-
-    // }
-}

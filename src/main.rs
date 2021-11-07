@@ -1,24 +1,37 @@
 pub mod watch;
 pub mod facility;
 pub mod target;
+pub mod associated;
 
-use ethers_contract_abigen::Abigen;
+use actix_web::{web, App, HttpRequest, HttpServer, Responder, Result};
+use serde::Deserialize;
 
-// fn main() -> Result<(), Box<dyn std::error::Error>> {
-//     let facility_cfg = facility::read_facility_cfg("./mock-cfg.json")?;
 
-//     println!("cfg: {:?} \n", facility_cfg);
+#[derive(Deserialize)]
+struct Info {
+    username: String,
+}
 
-//     let fetcher = target::Fetcher::new(&facility_cfg);
-//     let state = fetcher.fetch_ibport_state();
+pub type WrappedResult<T> = Result<T, Box<dyn std::error::Error>>;
 
-//     println!("state: {:?} \n", state);
+/// extract `Info` using serde
+async fn handle_associated_token_account(info: web::Json<Info>) -> Result<String> {
+    Ok(format!("Welcome {}!", info.username))
+}
 
-//     Ok(())
-// }
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    
-    Abigen::new("LUPort", "./abi/luport.json")?.generate()?.write_to_file("luport_abi.rs")?;
+async fn greet(req: HttpRequest) -> impl Responder {
+    let name = req.match_info().get("name").unwrap_or("World");
+    format!("Hello {}!", &name)
+}
 
-    Ok(())
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .route("/api/associated-token-account", web::post().to(handle_associated_token_account))
+            .route("/{name}", web::get().to(greet))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
